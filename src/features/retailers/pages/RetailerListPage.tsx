@@ -1,14 +1,12 @@
 import { useMemo, useState } from 'react'
 import {
   MapPin,
-  Phone,
   Plus,
   Search,
   Store,
-  Users,
   UserCheck,
-  UserX,
-  X,
+  UserRoundX,
+  Users,
 } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
@@ -22,8 +20,6 @@ interface Retailer {
   address: string
   status: RetailerStatus
 }
-
-type StatusFilter = 'All' | RetailerStatus
 
 const retailers: Retailer[] = [
   {
@@ -52,64 +48,66 @@ const retailers: Retailer[] = [
   },
   {
     id: 4,
-    name: 'Al-Amin Corporation',
+    name: 'City Fashion House',
     tin: '789123456012',
     mobile: '01612345678',
-    address: 'Motijheel, Dhaka',
+    address: 'Gulshan, Dhaka',
     status: 'Active',
   },
   {
     id: 5,
-    name: 'Sarker Trading',
+    name: 'Al-Amin General Store',
     tin: '321654987012',
     mobile: '01512345678',
-    address: 'Farmgate, Dhaka',
+    address: 'Dhanmondi, Dhaka',
     status: 'Active',
   },
   {
     id: 6,
-    name: 'Maa Enterprise',
-    tin: '654321789012',
-    mobile: '01312345678',
+    name: 'Modern Electronics',
+    tin: '654321987012',
+    mobile: '01798765432',
+    address: 'Banani, Dhaka',
+    status: 'Active',
+  },
+  {
+    id: 7,
+    name: 'Popular Enterprise',
+    tin: '852963741012',
+    mobile: '01898765432',
     address: 'Mohammadpur, Dhaka',
     status: 'Inactive',
   },
   {
-    id: 7,
-    name: 'Bismillah Traders',
-    tin: '852963741012',
-    mobile: '01412345678',
-    address: 'Jatrabari, Dhaka',
-    status: 'Active',
-  },
-  {
     id: 8,
-    name: 'City Fashion House',
+    name: 'New Star Traders',
     tin: '147258369012',
-    mobile: '01798765432',
-    address: 'Dhanmondi, Dhaka',
+    mobile: '01998765432',
+    address: 'Badda, Dhaka',
     status: 'Active',
   },
 ]
 
-const filters: StatusFilter[] = ['All', 'Active', 'Inactive']
+type StatusFilter = 'All Status' | RetailerStatus
 
 function RetailerListPage() {
   const [search, setSearch] = useState('')
-  const [statusFilter, setStatusFilter] = useState<StatusFilter>('All')
+  const [statusFilter, setStatusFilter] =
+    useState<StatusFilter>('All Status')
 
   const filteredRetailers = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase()
+    const query = search.trim().toLowerCase()
 
     return retailers.filter((retailer) => {
       const matchesSearch =
-        normalizedSearch.length === 0 ||
-        retailer.name.toLowerCase().includes(normalizedSearch) ||
-        retailer.tin.toLowerCase().includes(normalizedSearch) ||
-        retailer.mobile.includes(normalizedSearch)
+        !query ||
+        retailer.name.toLowerCase().includes(query) ||
+        retailer.tin.toLowerCase().includes(query) ||
+        retailer.mobile.toLowerCase().includes(query)
 
       const matchesStatus =
-        statusFilter === 'All' || retailer.status === statusFilter
+        statusFilter === 'All Status' ||
+        retailer.status === statusFilter
 
       return matchesSearch && matchesStatus
     })
@@ -137,7 +135,7 @@ function RetailerListPage() {
     {
       label: 'Inactive Retailers',
       value: inactiveCount,
-      icon: UserX,
+      icon: UserRoundX,
       iconClass: 'bg-warning-soft text-warning',
     },
   ]
@@ -147,13 +145,20 @@ function RetailerListPage() {
       {/* Page heading */}
       <section className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <div className="flex items-center gap-2 text-sm text-muted">
-            <span>Dashboard</span>
-            <span>/</span>
-            <span className="font-medium text-primary-700">Retailers</span>
+          <div className="mb-2 flex items-center gap-2 text-sm">
+            <Link
+              to="/"
+              className="text-muted transition hover:text-primary-700"
+            >
+              Dashboard
+            </Link>
+            <span className="text-muted">/</span>
+            <span className="font-semibold text-primary-700">
+              Retailers
+            </span>
           </div>
 
-          <h1 className="mt-2 text-2xl font-bold text-foreground">
+          <h1 className="text-2xl font-bold tracking-tight text-foreground">
             Retailer Management
           </h1>
 
@@ -164,9 +169,9 @@ function RetailerListPage() {
 
         <Link
           to="/retailers/new"
-          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-control bg-primary-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-600"
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-xl bg-primary-700 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-primary-600"
         >
-          <Plus size={18} />
+          <Plus size={19} />
           Add Retailer
         </Link>
       </section>
@@ -185,8 +190,10 @@ function RetailerListPage() {
               className="flex items-center justify-between rounded-card border border-border/70 bg-surface p-5 shadow-sm"
             >
               <div>
-                <p className="text-sm font-medium text-muted">{card.label}</p>
-                <p className="mt-2 text-2xl font-bold text-foreground">
+                <p className="text-sm font-medium text-muted">
+                  {card.label}
+                </p>
+                <p className="mt-2 text-2xl font-bold tracking-tight text-foreground">
                   {card.value}
                 </p>
               </div>
@@ -201,75 +208,50 @@ function RetailerListPage() {
 
       {/* Retailer list */}
       <section className="overflow-hidden rounded-card border border-border/70 bg-surface shadow-sm">
-        <div className="border-b border-border p-5">
-          <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-foreground">
-                Registered Retailers
-              </h2>
-              <p className="mt-1 text-sm text-muted">
-                {filteredRetailers.length} of {retailers.length} retailers
-              </p>
+        <div className="flex flex-col gap-4 border-b border-border p-5 xl:flex-row xl:items-center xl:justify-between">
+          <div>
+            <h2 className="text-lg font-bold text-foreground">
+              Registered Retailers
+            </h2>
+            <p className="mt-1 text-sm text-muted">
+              {filteredRetailers.length} of {retailers.length} retailers
+            </p>
+          </div>
+
+          <div className="flex flex-col gap-3 sm:flex-row">
+            <div className="relative min-w-0 sm:w-72">
+              <Search
+                size={18}
+                className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
+              />
+              <input
+                type="search"
+                value={search}
+                onChange={(event) => setSearch(event.target.value)}
+                placeholder="Search name, TIN or mobile..."
+                aria-label="Search retailers by name, TIN or mobile"
+                className="h-11 w-full rounded-xl border border-border bg-background pl-10 pr-4 text-sm text-foreground outline-none transition placeholder:text-muted focus:border-primary-600 focus:ring-2 focus:ring-primary-100"
+              />
             </div>
 
-            <div className="flex flex-col gap-3 sm:flex-row">
-              {/* Search */}
-              <div className="relative min-w-0 sm:w-72">
-                <Search
-                  size={18}
-                  className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted"
-                />
-
-                <input
-                  type="search"
-                  value={search}
-                  onChange={(event) => setSearch(event.target.value)}
-                  placeholder="Search name, TIN or mobile..."
-                  aria-label="Search retailers by name, TIN or mobile"
-                  className="h-11 w-full rounded-control border border-border bg-background pl-10 pr-10 text-sm text-foreground outline-none transition placeholder:text-muted focus:border-primary-600 focus:ring-2 focus:ring-primary-100"
-                />
-
-                {search && (
-                  <button
-                    type="button"
-                    onClick={() => setSearch('')}
-                    aria-label="Clear search"
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-muted hover:text-foreground"
-                  >
-                    <X size={16} />
-                  </button>
-                )}
-              </div>
-
-              {/* Status filter */}
-              <div className="relative sm:w-40">
-                <select
-                  value={statusFilter}
-                  onChange={(event) =>
-                    setStatusFilter(event.target.value as StatusFilter)
-                  }
-                  aria-label="Filter retailers by status"
-                  className="h-11 w-full appearance-none rounded-control border border-border bg-background px-4 pr-9 text-sm font-medium text-foreground outline-none transition focus:border-primary-600 focus:ring-2 focus:ring-primary-100"
-                >
-                  {filters.map((filter) => (
-                    <option key={filter} value={filter}>
-                      {filter === 'All' ? 'All Status' : filter}
-                    </option>
-                  ))}
-                </select>
-
-                <Store
-                  size={16}
-                  className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted"
-                />
-              </div>
-            </div>
+            <select
+              value={statusFilter}
+              onChange={(event) =>
+                setStatusFilter(event.target.value as StatusFilter)
+              }
+              aria-label="Filter retailers by status"
+              className="h-11 min-w-0 rounded-xl border border-border bg-background px-4 text-sm text-foreground outline-none transition focus:border-primary-600 focus:ring-2 focus:ring-primary-100 sm:w-40"
+            >
+              <option value="All Status">All Status</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
           </div>
         </div>
 
         {/* Desktop table */}
         <div className="hidden overflow-x-auto md:block">
-          <table className="w-full text-left text-sm">
+          <table className="w-full min-w-[760px] text-left text-sm">
             <thead className="bg-background text-xs uppercase tracking-wide text-muted">
               <tr>
                 <th className="px-5 py-4 font-semibold">Retailer</th>
@@ -297,19 +279,19 @@ function RetailerListPage() {
                     </div>
                   </td>
 
-                  <td className="px-5 py-4 tabular-nums text-muted">
+                  <td className="px-5 py-4 text-muted">
                     {retailer.tin}
                   </td>
 
-                  <td className="px-5 py-4 tabular-nums text-muted">
+                  <td className="px-5 py-4 text-muted">
                     {retailer.mobile}
                   </td>
 
-                  <td className="px-5 py-4 text-muted">
-                    <span className="flex items-center gap-1.5">
-                      <MapPin size={15} />
+                  <td className="px-5 py-4">
+                    <div className="flex items-center gap-2 text-muted">
+                      <MapPin size={16} className="shrink-0" />
                       {retailer.address}
-                    </span>
+                    </div>
                   </td>
 
                   <td className="px-5 py-4">
@@ -329,10 +311,10 @@ function RetailerListPage() {
           </table>
         </div>
 
-        {/* Mobile cards */}
+        {/* Mobile retailer cards */}
         <div className="divide-y divide-border md:hidden">
           {filteredRetailers.map((retailer) => (
-            <article key={retailer.id} className="space-y-3 p-4">
+            <article key={retailer.id} className="p-4">
               <div className="flex items-start justify-between gap-3">
                 <div className="flex min-w-0 items-center gap-3">
                   <div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-primary-50 text-primary-700">
@@ -350,7 +332,7 @@ function RetailerListPage() {
                 </div>
 
                 <span
-                  className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${
+                  className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold ${
                     retailer.status === 'Active'
                       ? 'bg-success-soft text-success'
                       : 'bg-warning-soft text-warning'
@@ -360,14 +342,10 @@ function RetailerListPage() {
                 </span>
               </div>
 
-              <div className="flex flex-wrap gap-x-4 gap-y-2 pl-[52px] text-xs text-muted">
-                <span className="flex items-center gap-1.5">
-                  <Phone size={14} />
-                  {retailer.mobile}
-                </span>
-
-                <span className="flex items-center gap-1.5">
-                  <MapPin size={14} />
+              <div className="ml-[52px] mt-3 flex flex-wrap gap-x-4 gap-y-2 text-xs text-muted">
+                <span>{retailer.mobile}</span>
+                <span className="inline-flex items-center gap-1">
+                  <MapPin size={13} />
                   {retailer.address}
                 </span>
               </div>
@@ -377,24 +355,21 @@ function RetailerListPage() {
 
         {/* Empty state */}
         {filteredRetailers.length === 0 && (
-          <div className="px-5 py-14 text-center">
+          <div className="px-5 py-12 text-center">
             <div className="mx-auto flex size-12 items-center justify-center rounded-full bg-background text-muted">
               <Search size={22} />
             </div>
-
-            <h3 className="mt-4 font-semibold text-foreground">
+            <h3 className="mt-3 font-semibold text-foreground">
               No retailers found
             </h3>
-
             <p className="mt-1 text-sm text-muted">
-              Try another search term or change the status filter.
+              Try another name, TIN, mobile number or status.
             </p>
-
             <button
               type="button"
               onClick={() => {
                 setSearch('')
-                setStatusFilter('All')
+                setStatusFilter('All Status')
               }}
               className="mt-4 text-sm font-semibold text-primary-700 hover:text-primary-600"
             >
@@ -402,20 +377,7 @@ function RetailerListPage() {
             </button>
           </div>
         )}
-
-        {/* Table footer */}
-        {filteredRetailers.length > 0 && (
-          <div className="border-t border-border bg-background/60 px-5 py-4">
-            <p className="text-xs text-muted">
-              Showing {filteredRetailers.length} of {retailers.length} retailers
-            </p>
-          </div>
-        )}
       </section>
-
-      <p className="pb-4 text-center text-xs text-muted">
-        Retailer information shown here is demonstration data.
-      </p>
     </div>
   )
 }
