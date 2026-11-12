@@ -4,6 +4,8 @@ import PlaceholderPage from '@/app/PlaceholderPage'
 import AppLayout from '@/components/layout/AppLayout'
 import DashboardPage from '@/features/dashboard/pages/DashboardPage'
 import AddRetailerPage from '@/features/retailers/pages/AddRetailerPage'
+import EditRetailerPage from '@/features/retailers/pages/EditRetailerPage'
+import RetailerDetailsPage from '@/features/retailers/pages/RetailerDetailsPage'
 import RetailerListPage from '@/features/retailers/pages/RetailerListPage'
 
 export const router = createBrowserRouter([
@@ -22,6 +24,14 @@ export const router = createBrowserRouter([
       {
         path: 'retailers/new',
         element: <AddRetailerPage />,
+      },
+      {
+        path: 'retailers/:id',
+        element: <RetailerDetailsPage />,
+      },
+      {
+        path: 'retailers/:id/edit',
+        element: <EditRetailerPage />,
       },
       {
         path: 'collections',
