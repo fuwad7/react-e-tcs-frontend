@@ -2,6 +2,7 @@ import { createBrowserRouter, Navigate } from 'react-router-dom'
 
 import AppLayout from '@/components/layout/AppLayout'
 import DashboardPage from '@/features/dashboard/pages/DashboardPage'
+import RetailerListPage from '@/features/retailers/pages/RetailerListPage'
 import PlaceholderPage from '@/app/PlaceholderPage'
 
 export const router = createBrowserRouter([
@@ -15,10 +16,14 @@ export const router = createBrowserRouter([
       },
       {
         path: 'retailers',
+        element: <RetailerListPage />,
+      },
+      {
+        path: 'retailers/new',
         element: (
           <PlaceholderPage
-            title="Retailers"
-            description="View and manage retailer information."
+            title="Add Retailer"
+            description="Register a new retailer."
           />
         ),
       },

@@ -1,5 +1,4 @@
 import {
-  Building2,
   ClipboardList,
   FileText,
   Home,
@@ -8,6 +7,8 @@ import {
   Wallet,
 } from 'lucide-react'
 import { NavLink } from 'react-router-dom'
+
+import nbrGovernmentLogo from '@/assets/nbr-government-logo.png'
 
 const navigation = [
   { label: 'Dashboard', path: '/', icon: Home, end: true },
@@ -22,9 +23,12 @@ function Sidebar() {
   return (
     <aside className="hidden min-h-screen w-64 shrink-0 flex-col border-r border-border bg-surface lg:flex">
       <div className="flex h-20 items-center gap-3 border-b border-border px-6">
-        <div className="flex size-11 items-center justify-center rounded-xl bg-primary-700 text-white">
-          <Building2 size={24} />
-        </div>
+        <img
+          src={nbrGovernmentLogo}
+          alt="Government of Bangladesh"
+          className="size-11 shrink-0 object-contain"
+        />
+
         <div>
           <p className="text-sm font-bold tracking-wide text-foreground">
             NBR BANGLADESH

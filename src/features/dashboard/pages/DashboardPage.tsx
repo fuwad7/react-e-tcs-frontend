@@ -125,15 +125,6 @@ function DashboardPage() {
             </p>
           </div>
 
-          <div className="flex items-center gap-3 rounded-2xl border border-white/20 bg-white/10 p-3">
-            <div className="flex size-10 items-center justify-center rounded-full bg-white text-sm font-bold text-primary-700">
-              AO
-            </div>
-            <div>
-              <p className="text-sm font-semibold">Admin Officer</p>
-              <p className="text-xs text-white/70">NBR · TCS Division</p>
-            </div>
-          </div>
         </div>
       </section>
 
